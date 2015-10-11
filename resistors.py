@@ -2,13 +2,30 @@
 
 import itertools
 
-message1 = "Hello! Please enter a resistor value in ohms: "
-goal = float(raw_input(message1))
-#message2 = "Please enter a percent error threshold (%): "
-#error = float(raw_input(message2))
-message3 = "Please enter the resistors you have sperated by spaces: "
-# Enter each resistor value as R(N) where R is the resistance, and N is the number of resistors.\n
-resistorArray = map(float,raw_input(message3).split())
+
+def fromSI(string):
+	fix = string[len(string)-1]
+	if isinstance(string[len(string)-1], (int, long)) != True:
+		string = string[:-1]
+	if fix == 'k':
+		multipiler = 1e3
+	elif fix == 'M':
+		multipiler = 1e6
+	elif fix == 'G':
+		multipiler = 1e9
+	elif fix == 'T':
+		multipiler = 1e12
+	elif fix == 'm':
+		multipiler = 1e-3
+	elif fix == 'u':
+		multipiler = 1e-6
+	elif fix == 'n':
+		multipiler = 1e-9
+	elif fix == 'p':
+		multipiler = 1e-12
+	else:
+		multipiler = 1
+	return float(multipiler*float(string))
 
 def percentError(theoretical, emperical):
 	return (float(emperical)-float(theoretical))/float(theoretical)*100
@@ -31,23 +48,20 @@ def parallel(array):
 	else:
 		return 1/float(sum)
 
-'''
-def evaluateResistors(resistors):
-	for i in range(len(resistors)):
-		if type(resistors[i]) is list:
-			resistors[i] = evaluateResistors(resistors[i])
-			# try to add up in series. If we cannot, ma
-		elif resistors[i] == "s"
-'''
 
-#print parallel(resistorArray)
 
-'''
-def useArraySeries(array,n):
-	for i in range(len(array)):
-		if (percentError(goal) < error)
 
-'''
+
+
+
+print "Welcome to the resistor optimization program!\nThis program is designed to find the best resistance values for mulitple resistor resistors.\nNote: You can enter in the engineering suffix after your resistor!"
+message1 = "Hello! Please enter a resistor value in ohms: "
+goal = float(fromSI(raw_input(message1)))
+message2 = "Please enter the resistors you have sperated by spaces: "
+resistorArray = map(fromSI,raw_input(message2).split())
+
+
+
 
 solutions = []
 for i in range(len(resistorArray)+1):
@@ -63,13 +77,6 @@ s = sorted(solutions, key=lambda x: abs(goal - x["resistance"]))
 i = 0
 
 while True:
-	
-	#print s[i]
-	#print s[i+1]
-	#print s[i]['resistors'] == s[i+1]['resistors']
-	#print i
-	
-	#raw_input()
 	if s[i]['resistors'] == s[i+1]['resistors'] and s[i]['resistance'] == s[i+1]['resistance']:
 		s.pop(i)
 		i = i - 1
@@ -87,5 +94,3 @@ for i in range(len(s)):
 	outputString += "\t%.1f" % percentError(goal,s[i]['resistance'])
 	outputString += "\t" + str(s[i]['resistors'])
 	print outputString
-
-#print s
